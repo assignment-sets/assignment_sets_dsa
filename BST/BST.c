@@ -15,7 +15,7 @@ struct BST * createNode(){
     return newNode;
 }
 
-void insertNode(int data){
+void insert(int data){
     struct BST *newNode = createNode(), *temp = root;
     newNode->data = data;
     newNode->left = NULL;
@@ -41,21 +41,87 @@ void insertNode(int data){
     }
 }
 
-void displayInOrder(struct BST* root) {
-    if (root != NULL) {
-        displayInOrder(root->left);
-        printf("%d ", root->data);
-        displayInOrder(root->right);
+struct BST * search(int data){
+    struct BST *temp = root;
+    if(root == NULL)
+        return NULL;
+    while(temp != NULL){
+        if(temp->data == data)
+            break;
+        else{
+            if(data < temp->data)
+                temp = temp->left;
+            else
+                temp = temp->right;
+        }
+    }
+    return temp;
+}
+
+struct BST * previousOf(int data){
+    struct BST *temp = root, *prev;
+    if(root == NULL || data == root->data)
+        return NULL;
+    while(temp != NULL){
+        if(temp->data == data)
+            break;
+        prev = temp;
+        if(data < temp->data)
+            temp = temp->left;
+        else
+            temp = temp->right;
+    }
+    return prev;
+}
+
+struct BST * maxIn(struct BST *temp){
+    struct BST *max;
+    int maxVal = temp->data;
+    while(temp->right != NULL){
+        temp = temp->right;
+        if(temp->data > maxVal)
+            maxVal = temp->data;
+    }
+    max = search(maxVal);
+    return max;
+}
+
+
+void delete(int data){
+    struct BST *target = search(data);
+    if(target->left == NULL && target->right == NULL){
+        target = NULL;
+    }
+    else if(target->left != NULL && target->right != NULL){
+        struct BST *maxLeftLeaf = maxIn(target->left);
+        target->data = target->data + maxLeftLeaf->data;
+        maxLeftLeaf->data = target->data - maxLeftLeaf->data;
+        target->data = target->data - maxLeftLeaf->data;
+        delete(maxLeftLeaf->data);
+    }
+    else{
+        struct BST *nextOfTarget = target->left == NULL? target->right : target->left;
+        target->data = nextOfTarget->data;
+        nextOfTarget = NULL;
+    }
+}
+
+void displayInOrder(struct BST* temp) {
+    if (temp != NULL) {
+        displayInOrder(temp->left);
+        printf("%d ", temp->data);
+        displayInOrder(temp->right);
     }
 }
 
 int main(){
-    insertNode(5);
-    insertNode(4);
-    insertNode(6);
-    insertNode(3);
-    insertNode(99);
-    insertNode(-1);
+    insert(10);
+    insert(15);
+    insert(20);
+    insert(5);
+    insert(2);
+    insert(6);
     displayInOrder(root);
-    return 0;
+    delete(5);
+    displayInOrder(root);
 }
