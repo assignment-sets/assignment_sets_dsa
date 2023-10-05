@@ -5,8 +5,10 @@ int top_1 = -1, top_2 = -1;
 int stack_1[max_size], stack_2[max_size];
 
 void push(int data, int stack[], int *top){
-    if(*top == max_size - 1)
+    if(*top == max_size - 1){
+        printf("overflow !");
         return;
+    }
     (*top)++;
     stack[*top] = data;
 }
@@ -55,11 +57,16 @@ void displayQueue(){
 }
 
 int main(){
-    enqueue(5);
     enqueue(53);
-    enqueue(35);
-    displayQueue();
-    dequeue();
-    displayQueue();
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
+    enqueue(53);
     return 0;
 }
