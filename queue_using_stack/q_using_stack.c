@@ -26,10 +26,9 @@ void display(int stack[], int *top){
         printf("underflow !");
         return;
     }
-    int i = *top;
-    while(i != -1){
-        printf("%d\n", stack[i]);
-        i--;
+    int j = *top, i;
+    for(i=0; i<=j; i++){
+        printf("%d ", stack[i]);
     }
 }
 
@@ -50,7 +49,17 @@ int dequeue(){
     }
     return poppedVal;
 }
+void displayQueue(){
+    display(stack_1, &top_1);
+    printf("\n");
+}
 
 int main(){
+    enqueue(5);
+    enqueue(53);
+    enqueue(35);
+    displayQueue();
+    dequeue();
+    displayQueue();
     return 0;
 }
