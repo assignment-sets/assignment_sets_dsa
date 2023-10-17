@@ -1,14 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define q_size 50
 #define data_size 6
 #define numEdges 8
 
-int front = -1, rear = -1;
-struct node *queue[q_size];
 int dataSet[data_size] = {1, 5, 3, 4, 2, 7};
 struct graph *g;
 int visited[data_size] = {0};
+int DFS_result[data_size], res_indx = 0;
 
 struct node{
     int index, data;
@@ -46,54 +44,25 @@ struct graph *myGraph(int *dataSet){
     return g;
 }
 
-void enqueue(struct node *p){
-    if(rear == q_size-1){
-        printf("Queue Overflow !");
-        return;
-    }
-    if(front == -1){
-        front = rear = 0;
-        queue[front] = p;
-    }
-    rear++;
-    queue[rear] = p;
-}
-
-struct node *dequeue(){
-    if(front == -1 || front > rear){
-        front = rear = -1;
-        printf("Queue Underflow !");
-        return NULL;
-    }
-    struct node* temp = queue[front]; 
-    front++;
-    return temp;
-}
-
-void bfsSearch(int source){
-    int i = source;
-    while(front <= rear){
-        if(i < g->v){
-            if(visited[i] != 1){
-                enqueue(g->adjList + i);
-                visited[i] = 1;
-                i++;
-            }
-        }
-        struct node *temp_1 = dequeue(), *temp_2 = temp_1;
-        printf("%d\n", temp_1->data);
-        while(temp_2->next != temp_1){
-            temp_2 = temp_2->next;
-            if(visited[temp_2->index] != 1){
-                enqueue(g->adjList + temp_2->index);
-                visited[temp_2->index] = 1;
-            }
-        }
+void DFS(int src){
+    visited[src] = 1;
+    DFS_result[res_indx++] = g->adjList[src].data;
+    struct node *temp = (g->adjList + src);
+    while(temp->next != (g->adjList + src)){
+        temp = temp->next;
+        if(visited[temp->index] != 1)
+            DFS(temp->index);
     }
 }
 
 int main(){
+    int src;
     g = myGraph(dataSet);
-    bfsSearch(2);
+    printf("Enter the src node index : ");
+    scanf("%d", &src);
+    DFS(src);
+    printf("The dfs traversal result is :\n");
+    for(int i=0; i<(data_size - src); i++)
+        printf("%d ", DFS_result[i]);
     return 0;
 }
