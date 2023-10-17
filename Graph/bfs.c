@@ -51,12 +51,14 @@ void enqueue(struct node *p){
         printf("Queue Overflow !");
         return;
     }
-    if(front == -1){
+    else if(front == -1){
         front = rear = 0;
         queue[front] = p;
     }
-    rear++;
-    queue[rear] = p;
+    else{
+        rear++;
+        queue[rear] = p;
+    }
 }
 
 struct node *dequeue(){
@@ -70,15 +72,15 @@ struct node *dequeue(){
     return temp;
 }
 
-void bfsSearch(int source){
+void BFS(int source){
     int i = source;
     while(front <= rear){
         if(i < g->v){
             if(visited[i] != 1){
                 enqueue(g->adjList + i);
                 visited[i] = 1;
-                i++;
             }
+            i++;
         }
         struct node *temp_1 = dequeue(), *temp_2 = temp_1;
         printf("%d\n", temp_1->data);
@@ -94,6 +96,6 @@ void bfsSearch(int source){
 
 int main(){
     g = myGraph(dataSet);
-    bfsSearch(2);
+    BFS(0);
     return 0;
 }
