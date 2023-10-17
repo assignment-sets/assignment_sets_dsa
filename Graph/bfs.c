@@ -94,8 +94,22 @@ void BFS(int source){
     }
 }
 
+void displayAdjList(){
+    printf("The adj list is : \n");
+    for(int i=0; i<data_size; i++){
+        printf("%d  ", g->adjList[i].data);
+        struct node *temp = g->adjList + i;
+        while(temp->next != g->adjList + i){
+            temp = temp->next;
+            printf("%d ", temp->data);
+        }
+        printf("\n");
+    }
+}
+
 int main(){
     g = myGraph(dataSet);
-    BFS(0);
+    // displayAdjList();
+    BFS(1);
     return 0;
 }
