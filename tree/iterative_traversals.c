@@ -1,14 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define input_size 7
-#define stack_size 50
+#define input_size 13
 
 //gloval vars declaration
-struct node *stack[stack_size];
-int top = -1, keyVal = 0;
+int keyVal = 0;
 struct node *root = NULL;
-int visitedKeys[stack_size] = {0};
-struct node *result[stack_size];
+int visitedKeys[input_size] = {0};
+struct node *result[input_size];
 
 struct node{
     int data, key;
@@ -25,7 +23,7 @@ void insertNode(int data){
     newNode->data = data;
     newNode->left = NULL;
     newNode->right = NULL;
-    newNode->key = keyVal;
+    newNode->key = keyVal++;
 
     if(root == NULL)
         root = newNode;
@@ -51,49 +49,50 @@ void insertNode(int data){
     }
 }
 
-void push(struct node *myNode){
-    if(top == stack_size - 1)
-        return;
-    top++;
-    stack[top] = myNode;
-}
-
-struct node *pop(){
-    if(top == -1)
-        return NULL;
-    struct node *deletedNode = stack[top];
-    top--;
-    return deletedNode;
-}
-
-void loadStack(struct node *myRoot){
-    struct node *temp = myRoot;
-    while(temp != NULL){
-        push(temp);
-        visitedKeys[temp->key] = 1;
-        temp = temp->left;
+int allVisited(){
+    for(int i=0; i<input_size; i++){
+        if(visitedKeys[i] == 0)
+            return 0;
     }
+    return 1;
+}
+
+struct node *prevOf(struct node *target){
+    struct node *temp = root, *prev;
+    if(root == NULL || target == root)
+        return NULL;
+    while(temp != NULL){
+        if(temp == target)
+            break;
+        prev = temp;
+        if(target->data < temp->data)
+            temp = temp->left;
+        else
+            temp = temp->right;
+    }
+    return prev;
 }
 
 void inorderIterative(struct node *myRoot){
-    int i = 0;
-    loadStack(myRoot);
-    while(top != -1){
-        struct node *poppedVal = pop();
-        result[i++] = poppedVal;
-        if(poppedVal->left != NULL && visitedKeys[poppedVal->left->key] != 1){
-            push(poppedVal->left);
-            visitedKeys[poppedVal->right->key] = 1;
+    struct node *temp = myRoot;
+    int i=0;
+    while(!allVisited()){
+        while(temp->left != NULL && visitedKeys[temp->left->key] != 1){
+            temp = temp->left;
         }
-        else if(poppedVal->right != NULL && visitedKeys[poppedVal->right->key] != 1){
-            push(poppedVal->right);
-            visitedKeys[poppedVal->right->key] = 1;
+        if(visitedKeys[temp->key] != 1){
+            result[i++] = temp;
+            visitedKeys[temp->key] = 1;
         }
+        if(temp->right != NULL && visitedKeys[temp->right->key] != 1)
+            temp =temp->right;
+        else
+            temp = prevOf(temp);
     }
 }
 
 int main(){
-    int inputSet[input_size] = {5,2,3,4,1,6,7};
+    int inputSet[input_size] = {15, 10, 20, 5, 13, 18, 25, 3, 7, 12, 16, 22, 30};
 
     for(int i=0; i<input_size; i++)
         insertNode(inputSet[i]);
