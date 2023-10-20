@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define input_size 13
+#define input_size 7
 
 //gloval vars declaration
 int keyVal = 0;
@@ -91,13 +91,63 @@ void inorderIterative(struct node *myRoot){
     }
 }
 
+void postOrderIterative(struct node *myRoot){
+    struct node *temp = myRoot;
+    int i = 0;
+    while(!allVisited()){
+        while(temp->left != NULL && visitedKeys[temp->left->key] != 1){
+            temp = temp->left;
+        }
+        while(temp->right != NULL && visitedKeys[temp->right->key] != 1)
+            temp =temp->right;
+
+        if(visitedKeys[temp->key] != 1){
+            result[i++] = temp;
+            visitedKeys[temp->key] = 1;
+        }
+        else
+            temp = prevOf(temp);
+    }
+}
+
+void preOrderIterative(struct node *myRoot){
+    struct node *temp = myRoot;
+    int i = 0;
+    while(!allVisited()){
+        while(temp->left != NULL && visitedKeys[temp->left->key] != 1){
+            if(visitedKeys[temp->key] != 1){
+                result[i++] = temp;
+                visitedKeys[temp->key] = 1;
+            }
+            temp = temp->left;
+        }
+
+        while(temp->right != NULL && visitedKeys[temp->right->key] != 1){
+            if(visitedKeys[temp->key] != 1){
+                result[i++] = temp;
+                visitedKeys[temp->key] = 1;
+            }
+            temp =temp->right;
+        }
+
+        if(visitedKeys[temp->key] != 1){
+            result[i++] = temp;
+            visitedKeys[temp->key] = 1;
+        }
+
+        temp = prevOf(temp);
+    }
+}
+
 int main(){
-    int inputSet[input_size] = {15, 10, 20, 5, 13, 18, 25, 3, 7, 12, 16, 22, 30};
+    int inputSet[input_size] = {5, 2, 3, 4, 1, 6, 7};
 
     for(int i=0; i<input_size; i++)
         insertNode(inputSet[i]);
 
-    inorderIterative(root);
+    // inorderIterative(root);
+    // postOrderIterative(root);
+    // preOrderIterative(root);
     
     for(int j=0; j<input_size; j++)
         printf("%d ", result[j]->data);
