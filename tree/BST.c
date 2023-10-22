@@ -141,6 +141,15 @@ void mirrorBst(struct BST *myRoot){
     myRoot->right = temp;
 }
 
+int isComplete(struct BST *myRoot){
+    if(myRoot != NULL){
+        if(myRoot->left != NULL && myRoot->right == NULL || myRoot->left == NULL && myRoot->right != NULL)
+            return 0;
+        return isComplete(myRoot->left) && isComplete(myRoot->right);
+    }
+    return 1;
+}
+
 int main(){
     insert(10);
     insert(15);
