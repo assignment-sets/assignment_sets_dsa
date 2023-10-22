@@ -130,6 +130,17 @@ void displayInOrder(struct BST* temp) {//to display the tree in incrementing ord
     }
 }
 
+void mirrorBst(struct BST *myRoot){
+    if(myRoot == NULL || myRoot->left == NULL && myRoot->right == NULL)
+        return;
+
+    mirrorBst(myRoot->left);
+    mirrorBst(myRoot->right);
+    struct node *temp = myRoot->left;
+    myRoot->left = myRoot->right;
+    myRoot->right = temp;
+}
+
 int main(){
     insert(10);
     insert(15);
